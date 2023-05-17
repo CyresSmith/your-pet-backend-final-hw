@@ -12,7 +12,7 @@ const { schemas } = require('../schemas');
 router.get('/', noticeCtrl.listAllNotice);
 
 // ============ створити ендпоінт для пошуку оголошеннь по заголовку
-// router.get('/notices/:q');
+router.get('/search', noticeCtrl.findNoticeByQuery);
 
 // ============ створити ендпоінт для отримання оголошень по категоріям
 router.get('/category/:category', noticeCtrl.getNoticeByCategory);

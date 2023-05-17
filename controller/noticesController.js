@@ -85,6 +85,25 @@ const updateFavorite = async (req, res) => {
   res.status(200).json(result);
 };
 
+const findNoticeByQuery = async (req, res) => {
+  const { query = null } = req.query;
+
+  if (!query) {
+    throw httpError(400, 'Query parameter required');
+  }
+
+  const result = await Notice.find(
+    { $text: { $search: query } },
+    { score: { $meta: 'textScore' } }
+  ).sort({ score: { $meta: 'textScore' } });
+
+  if (!result) {
+    throw httpError(404);
+  }
+
+  res.status(200).json(result);
+};
+
 // const updateFavoriteDelete = async (req, res) => {
 //   const { id } = req.params;
 //   const result = await Notice.findByIdAndUpdate(id, req.body, { new: false });
@@ -127,6 +146,7 @@ module.exports = {
   // litsOwnerFavorite: ctrlWrapper(litsOwnerFavorite),
   updateFavorite: ctrlWrapper(updateFavorite),
   getNoticeById: ctrlWrapper(getNoticeById),
+  findNoticeByQuery: ctrlWrapper(findNoticeByQuery),
   // litsOwnerAdded: ctrlWrapper(litsOwnerAdded),
   // deleteOwnerAdded: ctrlWrapper(deleteOwnerAdded),
 };
